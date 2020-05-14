@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Busca MAL</title>
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" placeholder="Digite um nick">
+        <select id="type">
+            <option value="anime">Animes</option>
+            <option value="manga">Mangas</option>
+        </select>
+        <select id="status">
+            <option id="tradeA" value="watching">watching</option>
+            <option value="completed">completed</option>
+            <option value="dropped">dropped</option>
+            <option id="tradeB" value="plantowatch">plan to watch</option>
+        </select>
+        <select id="statusAired">
+            <option value="yes">com status de lançamento</option>
+            <option value="no">sem status de lançamento</option>
+        </select>
+        <select id="showScore">
+            <option value="yes">com notas</option>
+            <option value="no">sem notas</option>
+        </select>
+        <select id="scores">
+            <option value="no">Sem filtro de notas</option>
+            <option value="1">Nota 1</option>
+            <option value="2">Nota 2</option>
+            <option value="3">Nota 3</option>
+            <option value="4">Nota 4</option>
+            <option value="5">Nota 5</option>
+            <option value="6">Nota 6</option>
+            <option value="7">Nota 7</option>
+            <option value="8">Nota 8</option>
+            <option value="9">Nota 9</option>
+            <option value="10">Nota 10</option>
+        </select>
+        <button>Mostrar</button>
+        <ol>
+        </ol>
+    </div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>

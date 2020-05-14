@@ -47,7 +47,8 @@ function nomeTitulos(user, status, type, showScore, valueScore, showStatusAired)
             renderTodos(titles);
         })
         .catch(function (error) {
-            console.log(error);
+            titles[0] = "Nick Inválido";
+            renderTodos(titles);
         });
 }
 

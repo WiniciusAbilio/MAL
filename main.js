@@ -10,13 +10,13 @@ function nomeTitulos(user, status, type, showScore, valueScore, showStatusAired)
     axios.get(`https://api.jikan.moe/v3/user/${user}/${type}list/${status}`)
         .then(function (response) {
             var arrayData = response.data[type];
+            var typeAired = "airing_status";
+            if (type == "manga") {
+                typeAired = "publishing_status";
+            }
             for (var i = 0; i < arrayData.length; i++) {
                 //verifica se mostra ou nao o status de lancamento
                 if (showStatusAired == "yes") {
-                    var typeAired = "airing_status";
-                    if (type == "manga") {
-                        typeAired = "publishing_status";
-                    }
                     if (arrayData[i][typeAired] == 2) {
                         statusAired[i] = " | Finished";
                     } else if (arrayData[i][typeAired] == 1) {
@@ -43,7 +43,7 @@ function nomeTitulos(user, status, type, showScore, valueScore, showStatusAired)
                 } else if (valueScore == "no") {
                     title[i] = arrayData[i].title;
                 }
-                
+
                 if (title[i] != undefined) {
                     titles[i] = `${title[i]} ${scores[i]}${statusAired[i]}`
                 }

@@ -82,7 +82,7 @@ selectorElementType.onclick = function () {
         optionA.innerHTML = "watching";
         optionA.setAttribute('value', 'watching');
         optionB.innerHTML = "plan to watching";
-        optionB.setAttribute('value', 'watching');
+        optionB.setAttribute('value', 'plantowatch');
     }
 }
 

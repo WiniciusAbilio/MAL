@@ -4,12 +4,14 @@ var selectorElementType = document.getElementById('type');
 
 function nomeTitulos(user, status, type, showScore, valueScore, showStatusAired) {
     var titles = [];
+    var title = [];
     var scores = [];
     var statusAired = [];
     axios.get(`https://api.jikan.moe/v3/user/${user}/${type}list/${status}`)
         .then(function (response) {
             var arrayData = response.data[type];
             for (var i = 0; i < arrayData.length; i++) {
+                //verifica se mostra ou nao o status de lancamento
                 if (showStatusAired == "yes") {
                     var typeAired = "airing_status";
                     if (type == "manga") {
@@ -26,29 +28,30 @@ function nomeTitulos(user, status, type, showScore, valueScore, showStatusAired)
                 else {
                     statusAired[i] = "";
                 }
-                scores[i] = arrayData[i].score;
+                //verifica se mostra ou nao as notas
                 if (showScore == "yes") {
-                    if (scores[i] == valueScore) {
-                        titles[i] = `${arrayData[i].title} | Nota: ${scores[i]}${statusAired[i]}`;
-                    } else if (valueScore == "no") {
-                        if (scores[i] == 0) {
-                            scores[i] = "Não tem nota";
-                        }
-                        titles[i] = `${arrayData[i].title} | Nota: ${scores[i]}${statusAired[i]}`;
+                    if (arrayData[i].score == 0) {
+                        arrayData[i].score = "Não tem nota"
                     }
+                    scores[i] = `| Nota: ${arrayData[i].score}`;
                 } else {
-                    if (scores[i] == valueScore) {
-                        titles[i] = `${arrayData[i].title}${statusAired[i]}`;
-                    } else if (valueScore == "no") {
-                        titles[i] = `${arrayData[i].title}${statusAired[i]}`;
-                    }
+                    scores[i] = "";
+                }
+                //filtra os nomes pela nota
+                if (arrayData[i].score == valueScore) {
+                    title[i] = arrayData[i].title;
+                } else if (valueScore == "no") {
+                    title[i] = arrayData[i].title;
+                }
+                
+                if (title[i] != undefined) {
+                    titles[i] = `${title[i]} ${scores[i]}${statusAired[i]}`
                 }
             }
             renderTodos(titles);
         })
         .catch(function (error) {
-            titles[0] = "Nick Inválido";
-            renderTodos(titles);
+            alert("Nick Inválido");
         });
 }
 

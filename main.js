@@ -2,9 +2,11 @@ var buttonElement = document.querySelector('#app button');
 var listElement = document.querySelector("#app ol");
 var selectorElementType = document.getElementById('type');
 
-function nomeTitulos(user, status, type, showScore, valueScore, showStatusAired) {
+function nomeTitulos(user, status, type, showScore, valueScore, showStatusAired, valueStatus) {
     var titles = [];
     var title = [];
+    var titleScore = [];
+    var titleStatus = [];
     var scores = [];
     var statusAired = [];
     axios.get(`https://api.jikan.moe/v3/user/${user}/${type}list/${status}`)
@@ -39,8 +41,18 @@ function nomeTitulos(user, status, type, showScore, valueScore, showStatusAired)
                 }
                 //filtra os nomes pela nota
                 if (arrayData[i].score == valueScore) {
-                    title[i] = arrayData[i].title;
+                    titleScore[i] = arrayData[i].title;
                 } else if (valueScore == "no") {
+                    titleScore[i] = arrayData[i].title;
+                }
+                //filtra os nome pelo status de lancamento
+                if (arrayData[i][typeAired] == valueStatus) {
+                    titleStatus[i] = arrayData[i].title;
+                } else if (valueStatus == "no") {
+                    titleStatus[i] = arrayData[i].title;
+                }
+                //filtra entre os filtros
+                if (titleScore[i] == titleStatus[i]) {
                     title[i] = arrayData[i].title;
                 }
 
@@ -91,14 +103,16 @@ buttonElement.onclick = function () {
     var selectorElementStatus = document.getElementById('status');
     var selectorElementScore = document.getElementById('showScore');
     var selectorElementValueScore = document.getElementById('scores');
-    var selectedElementStatusAired = document.getElementById('statusAired');
+    var selectorElementStatusAired = document.getElementById('statusAired');
+    var selectorElementValueStatus = document.getElementById('valueStatus');
 
     var user = inputElementUser.value;
     var status = selectorElementStatus.options[selectorElementStatus.selectedIndex].value;
     var type = selectorElementType.options[selectorElementType.selectedIndex].value;
     var score = selectorElementScore.options[selectorElementScore.selectedIndex].value;
     var valueScore = selectorElementValueScore.options[selectorElementValueScore.selectedIndex].value;
-    var statusAired = selectedElementStatusAired.options[selectedElementStatusAired.selectedIndex].value;
+    var statusAired = selectorElementStatusAired.options[selectorElementStatusAired.selectedIndex].value;
+    var valueStatus = selectorElementValueStatus.options[selectorElementValueStatus.selectedIndex].value;
 
-    nomeTitulos(user, status, type, score, valueScore, statusAired);
+    nomeTitulos(user, status, type, score, valueScore, statusAired, valueStatus);
 }

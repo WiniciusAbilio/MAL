@@ -60,6 +60,9 @@ function nomeTitulos(user, status, type, showScore, valueScore, showStatusAired,
                     titles[i] = `${title[i]} ${scores[i]}${statusAired[i]}`
                 }
             }
+            if (titles.length == 0) {
+                alert("Sem títulos");
+            }
             renderTodos(titles);
         })
         .catch(function (error) {

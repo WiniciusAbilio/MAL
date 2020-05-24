@@ -21,7 +21,7 @@ function nomeTitulos(user, status, type, showScore, valueScore, showStatusAired,
                 if (showEpisodes == "yes") {
                     episodes[i] = `| Número de episódios: ${arrayData[i].total_episodes}`;
                     if (arrayData[i].total_episodes == 0) {
-                        episodes[i] = "| Número de episódios: Desconhecido";
+                        episodes[i] = " | Número de episódios: Desconhecido";
                     }
                 } else {
                     episodes[i] = "";

@@ -17,6 +17,15 @@ function nomeTitulos(user, status, type, showScore, valueScore, showStatusAired,
                 typeAired = "publishing_status";
             }
             for (var i = 0; i < arrayData.length; i++) {
+                //verifica se mostra o numero de episodios ou nao
+                if (showEpisodes == "yes") {
+                    episodes[i] = `| Número de episódios: ${arrayData[i].total_episodes}`;
+                    if (arrayData[i].total_episodes == 0) {
+                        episodes[i] = "| Número de episódios: Desconhecido";
+                    }
+                } else {
+                    episodes[i] = "";
+                }
                 //verifica se mostra ou nao o status de lancamento
                 if (showStatusAired == "yes") {
                     if (arrayData[i][typeAired] == 2) {

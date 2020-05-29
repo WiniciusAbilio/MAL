@@ -2,13 +2,14 @@ var buttonElement = document.querySelector('#app button');
 var listElement = document.querySelector("#app ol");
 var selectorElementType = document.getElementById('type');
 
-function nomeTitulos(user, status, type, showScore, valueScore, showStatusAired, valueStatus) {
+function nomeTitulos(user, status, type, showScore, valueScore, showStatusAired, valueStatus, showEpisodes) {
     var titles = [];
     var title = [];
     var titleScore = [];
     var titleStatus = [];
     var scores = [];
     var statusAired = [];
+    var episodes = [];
     axios.get(`https://api.jikan.moe/v3/user/${user}/${type}list/${status}`)
         .then(function (response) {
             var arrayData = response.data[type];
@@ -29,11 +30,11 @@ function nomeTitulos(user, status, type, showScore, valueScore, showStatusAired,
                 //verifica se mostra ou nao o status de lancamento
                 if (showStatusAired == "yes") {
                     if (arrayData[i][typeAired] == 2) {
-                        statusAired[i] = " | Finished";
+                        statusAired[i] = "| Finished";
                     } else if (arrayData[i][typeAired] == 1) {
-                        statusAired[i] = " | Airing";
+                        statusAired[i] = "| Airing";
                     } else {
-                        statusAired[i] = " | Not yet aired";
+                        statusAired[i] = "| Not yet aired";
                     }
                 }
                 else {
@@ -66,7 +67,7 @@ function nomeTitulos(user, status, type, showScore, valueScore, showStatusAired,
                 }
 
                 if (title[i] != undefined) {
-                    titles[i] = `${title[i]} ${scores[i]}${statusAired[i]}`
+                    titles[i] = `${title[i]} ${scores[i]} ${statusAired[i]} ${episodes[i]}`
                 }
             }
             if (titles.length == 0) {
@@ -117,6 +118,8 @@ buttonElement.onclick = function () {
     var selectorElementValueScore = document.getElementById('scores');
     var selectorElementStatusAired = document.getElementById('statusAired');
     var selectorElementValueStatus = document.getElementById('valueStatus');
+    var selectorElementShowEpisodes = document.getElementById('showEpisodes');
+
 
     var user = inputElementUser.value;
     var status = selectorElementStatus.options[selectorElementStatus.selectedIndex].value;
@@ -125,6 +128,7 @@ buttonElement.onclick = function () {
     var valueScore = selectorElementValueScore.options[selectorElementValueScore.selectedIndex].value;
     var statusAired = selectorElementStatusAired.options[selectorElementStatusAired.selectedIndex].value;
     var valueStatus = selectorElementValueStatus.options[selectorElementValueStatus.selectedIndex].value;
+    var showEpisodes = selectorElementShowEpisodes.options[selectorElementShowEpisodes.selectedIndex].value;
 
-    nomeTitulos(user, status, type, score, valueScore, statusAired, valueStatus);
+    nomeTitulos(user, status, type, score, valueScore, statusAired, valueStatus, showEpisodes);
 }

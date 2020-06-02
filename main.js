@@ -2,7 +2,7 @@ var buttonElement = document.querySelector('#app button');
 var listElement = document.querySelector("#app ol");
 var selectorElementType = document.getElementById('type');
 
-async function nomeTitulos(user, status, type, showScore, valueScore, showStatusAired, valueStatus, showEpisodes) {
+async function requestTitles(user, status, type, showScore, valueScore, showStatusAired, valueStatus, showEpisodes) {
     var titles = [];
     var title = [];
     var titleScore = [];
@@ -127,5 +127,5 @@ buttonElement.onclick = function () {
     var showEpisodes = selectorElementShowEpisodes.options[selectorElementShowEpisodes.selectedIndex].value;
 
     listElement.innerHTML = '';
-    nomeTitulos(user, status, type, score, valueScore, statusAired, valueStatus, showEpisodes);
+    requestTitles(user, status, type, score, valueScore, statusAired, valueStatus, showEpisodes);
 }

@@ -1,26 +1,26 @@
-var buttonElement = document.querySelector('#app button');
-var listElement = document.querySelector("#app ol");
-var selectorElementType = document.getElementById('type');
+const buttonElement = document.querySelector('#app button');
+const listElement = document.querySelector("#app ol");
+const selectorElementType = document.getElementById('type');
 
 async function requestTitles(user, status, type, showScore, valueScore, showStatusAired, valueStatus, showEpisodes) {
-    var titles = [];
-    var title = [];
-    var titleScore = [];
-    var titleStatus = [];
-    var scores = [];
-    var statusAired = [];
-    var episodes = [];
-    var arrayData = ["1"];
-    var index = 0;
+    let titles = [];
+    let title = [];
+    let titleScore = [];
+    let titleStatus = [];
+    let scores = [];
+    let statusAired = [];
+    let episodes = [];
+    let arrayData = ["1"];
+    let index = 0;
     while (arrayData.length != 0) {
         index++;
         const response = await axios.get(`https://api.jikan.moe/v3/user/${user}/${type}list/${status}?page=${index}`);
-        var arrayData = response.data[type];
-        var typeAired = "airing_status";
+        const arrayData = response.data[type];
+        let typeAired = "airing_status";
         if (type == "manga") {
             typeAired = "publishing_status";
         }
-        for (var i = 0; i < arrayData.length; i++) {
+        for (let i = 0; i < arrayData.length; i++) {
             //verifica se mostra o numero de episodios ou nao
             if (showEpisodes == "yes") {
                 episodes[i] = `| Número de episódios: ${arrayData[i].total_episodes}`;
@@ -80,8 +80,8 @@ async function requestTitles(user, status, type, showScore, valueScore, showStat
 function renderTodos(titles) {
     for (todo of titles) {
         if (todo != undefined) {
-            var todoElement = document.createElement('li');
-            var todoText = document.createTextNode(todo);
+            let todoElement = document.createElement('li');
+            let todoText = document.createTextNode(todo);
 
             todoElement.appendChild(todoText);
 
@@ -91,9 +91,9 @@ function renderTodos(titles) {
 }
 
 selectorElementType.onclick = function () {
-    var type = selectorElementType.options[selectorElementType.selectedIndex].value;
-    var optionA = document.getElementById('tradeA');
-    var optionB = document.getElementById('tradeB');
+    const type = selectorElementType.options[selectorElementType.selectedIndex].value;
+    let optionA = document.getElementById('tradeA');
+    let optionB = document.getElementById('tradeB');
     if (type == "manga") {
         optionA.innerHTML = "reading";
         optionA.setAttribute('value', 'reading');
@@ -108,23 +108,23 @@ selectorElementType.onclick = function () {
 }
 
 buttonElement.onclick = function () {
-    var inputElementUser = document.querySelector('#app input');
-    var selectorElementStatus = document.getElementById('status');
-    var selectorElementScore = document.getElementById('showScore');
-    var selectorElementValueScore = document.getElementById('scores');
-    var selectorElementStatusAired = document.getElementById('statusAired');
-    var selectorElementValueStatus = document.getElementById('valueStatus');
-    var selectorElementShowEpisodes = document.getElementById('showEpisodes');
+    const inputElementUser = document.querySelector('#app input');
+    const selectorElementStatus = document.getElementById('status');
+    const selectorElementScore = document.getElementById('showScore');
+    const selectorElementValueScore = document.getElementById('scores');
+    const selectorElementStatusAired = document.getElementById('statusAired');
+    const selectorElementValueStatus = document.getElementById('valueStatus');
+    const selectorElementShowEpisodes = document.getElementById('showEpisodes');
 
 
-    var user = inputElementUser.value;
-    var status = selectorElementStatus.options[selectorElementStatus.selectedIndex].value;
-    var type = selectorElementType.options[selectorElementType.selectedIndex].value;
-    var score = selectorElementScore.options[selectorElementScore.selectedIndex].value;
-    var valueScore = selectorElementValueScore.options[selectorElementValueScore.selectedIndex].value;
-    var statusAired = selectorElementStatusAired.options[selectorElementStatusAired.selectedIndex].value;
-    var valueStatus = selectorElementValueStatus.options[selectorElementValueStatus.selectedIndex].value;
-    var showEpisodes = selectorElementShowEpisodes.options[selectorElementShowEpisodes.selectedIndex].value;
+    const user = inputElementUser.value;
+    const status = selectorElementStatus.options[selectorElementStatus.selectedIndex].value;
+    const type = selectorElementType.options[selectorElementType.selectedIndex].value;
+    const score = selectorElementScore.options[selectorElementScore.selectedIndex].value;
+    const valueScore = selectorElementValueScore.options[selectorElementValueScore.selectedIndex].value;
+    const statusAired = selectorElementStatusAired.options[selectorElementStatusAired.selectedIndex].value;
+    const valueStatus = selectorElementValueStatus.options[selectorElementValueStatus.selectedIndex].value;
+    const showEpisodes = selectorElementShowEpisodes.options[selectorElementShowEpisodes.selectedIndex].value;
 
     listElement.innerHTML = '';
     requestTitles(user, status, type, score, valueScore, statusAired, valueStatus, showEpisodes);

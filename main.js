@@ -73,7 +73,7 @@ async function nomeTitulos(user, status, type, showScore, valueScore, showStatus
             }
         }
         renderTodos(titles);
-        titles = []
+        titles = [];
     }
 }
 

@@ -15,7 +15,7 @@ async function requestTitles(user, status, type, showScore, valueScore, showStat
     while (arrayData.length != 0) {
         index++;
         const response = await axios.get(`https://api.jikan.moe/v3/user/${user}/${type}list/${status}?page=${index}`);
-        const arrayData = response.data[type];
+        arrayData = response.data[type];
         let typeAired = "airing_status";
         if (type == "manga") {
             typeAired = "publishing_status";

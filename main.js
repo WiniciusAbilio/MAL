@@ -30,15 +30,16 @@ async function requestTitles(user, status, type, showScore, valueScore, showStat
         }
         for (let i = 0; i < arrayData.length; i++) {
             //verifica se mostra o numero de episodios ou nao
+            episodes[i] = "";
             if (showEpisodes == "yes") {
-                episodes[i] = `| Número de ${nameTypeTotal}: ${arrayData[i][typeTotal]}`;
+                let quantity = arrayData[i][typeTotal];
                 if (arrayData[i][typeTotal] == 0) {
-                    episodes[i] = `| Número de ${nameTypeTotal}: Desconhecido`;
+                    quantity = 'Desconhecido';
                 }
-            } else {
-                episodes[i] = "";
+                episodes[i] = `| Número de ${nameTypeTotal}: ${quantity}`;
             }
             //verifica se mostra ou nao o status de lancamento
+            statusAired[i] = "";
             if (showStatusAired == "yes") {
                 if (arrayData[i][typeAired] == 2) {
                     statusAired[i] = "| Finished";
@@ -48,17 +49,13 @@ async function requestTitles(user, status, type, showScore, valueScore, showStat
                     statusAired[i] = "| Not yet aired";
                 }
             }
-            else {
-                statusAired[i] = "";
-            }
             //verifica se mostra ou nao as notas
+            scores[i] = "";
             if (showScore == "yes") {
                 if (arrayData[i].score == 0) {
                     arrayData[i].score = "Não tem nota"
                 }
                 scores[i] = `| Nota: ${arrayData[i].score}`;
-            } else {
-                scores[i] = "";
             }
             //filtra os nomes pela nota
             if (arrayData[i].score == valueScore) {

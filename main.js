@@ -41,12 +41,11 @@ async function requestTitles(user, status, type, showScore, valueScore, showStat
             //verifica se mostra ou nao o status de lancamento
             statusAired[i] = "";
             if (showStatusAired == "yes") {
+                statusAired[i] = "| Not yet aired";
                 if (arrayData[i][typeAired] == 2) {
                     statusAired[i] = "| Finished";
                 } else if (arrayData[i][typeAired] == 1) {
                     statusAired[i] = "| Airing";
-                } else {
-                    statusAired[i] = "| Not yet aired";
                 }
             }
             //verifica se mostra ou nao as notas

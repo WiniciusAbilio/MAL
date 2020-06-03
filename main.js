@@ -16,16 +16,24 @@ async function requestTitles(user, status, type, showScore, valueScore, showStat
         index++;
         const response = await axios.get(`https://api.jikan.moe/v3/user/${user}/${type}list/${status}?page=${index}`);
         arrayData = response.data[type];
+        //tipo de status de lancamento anime/manga
         let typeAired = "airing_status";
         if (type == "manga") {
             typeAired = "publishing_status";
         }
+        //tipo de total episodios/capitulos
+        let typeTotal = "total_episodes";
+        let nameTypeTotal = "Episódios";
+        if (type == "manga") {
+            typeTotal = "total_chapters";
+            nameTypeTotal = "Capítulos";
+        }
         for (let i = 0; i < arrayData.length; i++) {
             //verifica se mostra o numero de episodios ou nao
             if (showEpisodes == "yes") {
-                episodes[i] = `| Número de episódios: ${arrayData[i].total_episodes}`;
-                if (arrayData[i].total_episodes == 0) {
-                    episodes[i] = "| Número de episódios: Desconhecido";
+                episodes[i] = `| Número de ${nameTypeTotal}: ${arrayData[i][typeTotal]}`;
+                if (arrayData[i][typeTotal] == 0) {
+                    episodes[i] = `| Número de ${nameTypeTotal}: Desconhecido`;
                 }
             } else {
                 episodes[i] = "";
@@ -68,6 +76,7 @@ async function requestTitles(user, status, type, showScore, valueScore, showStat
             if (titleScore[i] == titleStatus[i]) {
                 title[i] = arrayData[i].title;
             }
+            //filtra os espacos vazios do array
             if (title[i] != undefined) {
                 titles[i] = `${title[i]} ${scores[i]} ${statusAired[i]} ${episodes[i]}`
             }
@@ -92,22 +101,33 @@ function renderTodos(titles) {
 
 selectorElementType.onclick = function () {
     const type = selectorElementType.options[selectorElementType.selectedIndex].value;
-    let optionA = document.getElementById('tradeA');
-    let optionB = document.getElementById('tradeB');
+    //options do numero de episodios/capitulos
+    let optionShowEpisodesTypeA = document.getElementById('showTypeA');
+    let optionShowEpisodesTypeB = document.getElementById('showTypeB');
+    //options das seções(watching, completed, etc.) 
+    let optionTypeA = document.getElementById('tradeA');
+    let optionTypeB = document.getElementById('tradeB');
     if (type == "manga") {
-        optionA.innerHTML = "reading";
-        optionA.setAttribute('value', 'reading');
-        optionB.innerHTML = "plan to read";
-        optionB.setAttribute('value', 'plantoread');
+        optionShowEpisodesTypeA.innerHTML = "sem número de capítulos";
+        optionShowEpisodesTypeB.innerHTML = "com número de capítulos";
+
+        optionTypeA.innerHTML = "reading";
+        optionTypeA.setAttribute('value', 'reading');
+        optionTypeB.innerHTML = "plan to read";
+        optionTypeB.setAttribute('value', 'plantoread');
     } else {
-        optionA.innerHTML = "watching";
-        optionA.setAttribute('value', 'watching');
-        optionB.innerHTML = "plan to watching";
-        optionB.setAttribute('value', 'plantowatch');
+        optionShowEpisodesTypeA.innerHTML = "sem número de episódios";
+        optionShowEpisodesTypeB.innerHTML = "com número de episódios";
+
+        optionTypeA.innerHTML = "watching";
+        optionTypeA.setAttribute('value', 'watching');
+        optionTypeB.innerHTML = "plan to watching";
+        optionTypeB.setAttribute('value', 'plantowatch');
     }
 }
 
 buttonElement.onclick = function () {
+    //busca os elementos do html
     const inputElementUser = document.querySelector('#app input');
     const selectorElementStatus = document.getElementById('status');
     const selectorElementScore = document.getElementById('showScore');
@@ -115,8 +135,7 @@ buttonElement.onclick = function () {
     const selectorElementStatusAired = document.getElementById('statusAired');
     const selectorElementValueStatus = document.getElementById('valueStatus');
     const selectorElementShowEpisodes = document.getElementById('showEpisodes');
-
-
+    //pega o valor dos elementos do html
     const user = inputElementUser.value;
     const status = selectorElementStatus.options[selectorElementStatus.selectedIndex].value;
     const type = selectorElementType.options[selectorElementType.selectedIndex].value;

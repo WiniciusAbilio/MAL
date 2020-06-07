@@ -88,14 +88,12 @@ async function requestTitles(user, status, type, showScore, valueScore, showStat
 
 function renderTodos(titles) {
     for (todo of titles) {
-        if (todo != undefined) {
-            let todoElement = document.createElement('li');
-            let todoText = document.createTextNode(todo);
+        let todoElement = document.createElement('li');
+        let todoText = document.createTextNode(todo);
 
-            todoElement.appendChild(todoText);
+        todoElement.appendChild(todoText);
 
-            listElement.appendChild(todoElement);
-        }
+        listElement.appendChild(todoElement);
     }
 }
 

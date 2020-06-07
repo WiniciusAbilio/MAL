@@ -12,73 +12,77 @@ async function requestTitles(user, status, type, showScore, valueScore, showStat
     let episodes = [];
     let arrayData = ["1"];
     let index = 0;
-    while (arrayData.length != 0) {
-        index++;
-        const response = await axios.get(`https://api.jikan.moe/v3/user/${user}/${type}list/${status}?page=${index}`);
-        arrayData = response.data[type];
-        //tipo de status de lancamento anime/manga
-        let typeAired = "airing_status";
-        if (type == "manga") {
-            typeAired = "publishing_status";
-        }
-        //tipo de total episodios/capitulos
-        let typeTotal = "total_episodes";
-        let nameTypeTotal = "Episódios";
-        if (type == "manga") {
-            typeTotal = "total_chapters";
-            nameTypeTotal = "Capítulos";
-        }
-        for (let i = 0; i < arrayData.length; i++) {
-            //verifica se mostra o numero de episodios ou nao
-            episodes[i] = "";
-            if (showEpisodes == "yes") {
-                let quantity = arrayData[i][typeTotal];
-                if (arrayData[i][typeTotal] == 0) {
-                    quantity = 'Desconhecido';
+    try {
+        while (arrayData.length != 0) {
+            index++;
+            const response = await axios.get(`https://api.jikan.moe/v3/user/${user}/${type}list/${status}?page=${index}`);
+            arrayData = response.data[type];
+            //tipo de status de lancamento anime/manga
+            let typeAired = "airing_status";
+            if (type == "manga") {
+                typeAired = "publishing_status";
+            }
+            //tipo de total episodios/capitulos
+            let typeTotal = "total_episodes";
+            let nameTypeTotal = "Episódios";
+            if (type == "manga") {
+                typeTotal = "total_chapters";
+                nameTypeTotal = "Capítulos";
+            }
+            for (let i = 0; i < arrayData.length; i++) {
+                //verifica se mostra o numero de episodios ou nao
+                episodes[i] = "";
+                if (showEpisodes == "yes") {
+                    let quantity = arrayData[i][typeTotal];
+                    if (arrayData[i][typeTotal] == 0) {
+                        quantity = 'Desconhecido';
+                    }
+                    episodes[i] = `| Número de ${nameTypeTotal}: ${quantity}`;
                 }
-                episodes[i] = `| Número de ${nameTypeTotal}: ${quantity}`;
-            }
-            //verifica se mostra ou nao o status de lancamento
-            statusAired[i] = "";
-            if (showStatusAired == "yes") {
-                statusAired[i] = "| Not yet aired";
-                if (arrayData[i][typeAired] == 2) {
-                    statusAired[i] = "| Finished";
-                } else if (arrayData[i][typeAired] == 1) {
-                    statusAired[i] = "| Airing";
+                //verifica se mostra ou nao o status de lancamento
+                statusAired[i] = "";
+                if (showStatusAired == "yes") {
+                    statusAired[i] = "| Not yet aired";
+                    if (arrayData[i][typeAired] == 2) {
+                        statusAired[i] = "| Finished";
+                    } else if (arrayData[i][typeAired] == 1) {
+                        statusAired[i] = "| Airing";
+                    }
+                }
+                //verifica se mostra ou nao as notas
+                scores[i] = "";
+                if (showScore == "yes") {
+                    if (arrayData[i].score == 0) {
+                        arrayData[i].score = "Não tem nota"
+                    }
+                    scores[i] = `| Nota: ${arrayData[i].score}`;
+                }
+                //filtra os nomes pela nota
+                if (arrayData[i].score == valueScore) {
+                    titleScore[i] = arrayData[i].title;
+                } else if (valueScore == "no") {
+                    titleScore[i] = arrayData[i].title;
+                }
+                //filtra os nome pelo status de lancamento
+                if (arrayData[i][typeAired] == valueStatus) {
+                    titleStatus[i] = arrayData[i].title;
+                } else if (valueStatus == "no") {
+                    titleStatus[i] = arrayData[i].title;
+                }
+                //filtra entre os filtros
+                if (titleScore[i] == titleStatus[i]) {
+                    title[i] = arrayData[i].title;
+                }
+                //filtra os espacos vazios do array
+                if (title[i] != undefined) {
+                    titles[i] = `${title[i]} ${scores[i]} ${statusAired[i]} ${episodes[i]}`
                 }
             }
-            //verifica se mostra ou nao as notas
-            scores[i] = "";
-            if (showScore == "yes") {
-                if (arrayData[i].score == 0) {
-                    arrayData[i].score = "Não tem nota"
-                }
-                scores[i] = `| Nota: ${arrayData[i].score}`;
-            }
-            //filtra os nomes pela nota
-            if (arrayData[i].score == valueScore) {
-                titleScore[i] = arrayData[i].title;
-            } else if (valueScore == "no") {
-                titleScore[i] = arrayData[i].title;
-            }
-            //filtra os nome pelo status de lancamento
-            if (arrayData[i][typeAired] == valueStatus) {
-                titleStatus[i] = arrayData[i].title;
-            } else if (valueStatus == "no") {
-                titleStatus[i] = arrayData[i].title;
-            }
-            //filtra entre os filtros
-            if (titleScore[i] == titleStatus[i]) {
-                title[i] = arrayData[i].title;
-            }
-            //filtra os espacos vazios do array
-            if (title[i] != undefined) {
-                titles[i] = `${title[i]} ${scores[i]} ${statusAired[i]} ${episodes[i]}`
-            }
+            renderTodos(titles);
+            titles = [];
         }
-        renderTodos(titles);
-        titles = [];
+    } catch (e) {
+        alert(e);
     }
 }
 

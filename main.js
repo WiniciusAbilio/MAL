@@ -18,10 +18,8 @@ async function requestTitles(user, status, type, showScore, valueScore, showStat
                 //verifica se mostra o numero de episodios ou nao
                 episodes[i] = '';
                 if (showEpisodes == 'yes') {
-                    let quantity = arrayData[i][typeTotal];
-                    if (arrayData[i][typeTotal] == 0) {
-                        quantity = 'Desconhecido';
-                    }
+                if (showEpisodes == 'yes') {
+                    let quantity = arrayData[i][typeTotal] == 0 ? 'Desconhecido' : arrayData[i][typeTotal];
                     episodes[i] = `| Número de ${nameTypeTotal}: ${quantity}`;
                 }
                 //verifica se mostra ou nao o status de lancamento

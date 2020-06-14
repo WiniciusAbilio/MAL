@@ -3,32 +3,17 @@ const listElement = document.querySelector('#app ol');
 const selectorElementType = document.getElementById('type');
 
 async function requestTitles(user, status, type, showScore, valueScore, showStatusAired, valueStatus, showEpisodes) {
-    let titles = [];
-    let title = [];
-    let titleScore = [];
-    let titleStatus = [];
-    let scores = [];
-    let statusAired = [];
-    let episodes = [];
-    let arrayData = ['1'];
-    let index = 0;
+    let [titles, title, titleScore, titleStatus, scores, statusAired, episodes, arrayData, index] = [[], [], [], [], [], [], [], ['1'], 0];
     try {
+        //tipo de status de lancamento anime/manga
+        let typeAired = type == 'anime' ? 'airing_status' : 'publishing_status';
+        //tipo de total episodios/capitulos
+        let typeTotal = type == 'anime' ? 'total_episodes' : 'total_chapters';
+        let nameTypeTotal = type == 'anime' ? 'Episódios' : 'Capítulos';
         while (arrayData.length != 0) {
             index++;
             const response = await axios.get(`https://api.jikan.moe/v3/user/${user}/${type}list/${status}?page=${index}`);
             arrayData = response.data[type];
-            //tipo de status de lancamento anime/manga
-            let typeAired = 'airing_status';
-            if (type == 'manga') {
-                typeAired = 'publishing_status';
-            }
-            //tipo de total episodios/capitulos
-            let typeTotal = 'total_episodes';
-            let nameTypeTotal = 'Episódios';
-            if (type == 'manga') {
-                typeTotal = 'total_chapters';
-                nameTypeTotal = 'Capítulos';
-            }
             for (let i = 0; i < arrayData.length; i++) {
                 //verifica se mostra o numero de episodios ou nao
                 episodes[i] = '';
@@ -52,9 +37,7 @@ async function requestTitles(user, status, type, showScore, valueScore, showStat
                 //verifica se mostra ou nao as notas
                 scores[i] = '';
                 if (showScore == 'yes') {
-                    if (arrayData[i].score == 0) {
-                        arrayData[i].score = 'Não tem nota';
-                    }
+                    arrayData[i].score = arrayData[i].score == 0 ? 'Não tem nota' : arrayData[i].score;
                     scores[i] = `| Nota: ${arrayData[i].score}`;
                 }
                 //filtra os nomes pela nota

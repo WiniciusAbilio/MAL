@@ -3,14 +3,16 @@ const listElement = document.querySelector('#app ol');
 const selectorElementType = document.getElementById('type');
 
 async function requestTitles(user, status, type, showScore, valueScore, showStatusAired, valueStatus, showEpisodes) {
-    let [titles, title, titleScore, titleStatus, scores, statusAired, episodes, arrayData, index] = [[], [], [], [], [], [], [], ['1'], 0];
     try {
         //tipo de status de lancamento anime/manga
         let typeAired = type == 'anime' ? 'airing_status' : 'publishing_status';
         //tipo de total episodios/capitulos
         let typeTotal = type == 'anime' ? 'total_episodes' : 'total_chapters';
         let nameTypeTotal = type == 'anime' ? 'Episódios' : 'Capítulos';
+        let arrayData = ['1'];
+        let index = 0;
         while (arrayData.length != 0) {
+            let [titles, title, titleScore, titleStatus, scores, statusAired, episodes] = [[], [], [], [], [], [], []];
             index++;
             const response = await axios.get(`https://api.jikan.moe/v3/user/${user}/${type}list/${status}?page=${index}`);
             arrayData = response.data[type];
@@ -55,11 +57,10 @@ async function requestTitles(user, status, type, showScore, valueScore, showStat
                 }
                 //filtra os espacos vazios do array
                 if (title[i] != undefined) {
-                    titles[i] = `${title[i]} ${scores[i]} ${statusAired[i]} ${episodes[i]}`
+                    titles[i] = `${title[i]} ${scores[i]} ${statusAired[i]} ${episodes[i]}`;
                 }
             }
             renderTodos(titles);
-            titles = [];
         }
     } catch (e) {
         alert(e);

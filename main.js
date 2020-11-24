@@ -1,71 +1,98 @@
-const buttonElement = document.querySelector('#app button');
-const listElement = document.querySelector('#app ol');
+const buttonElementShow = document.querySelector('#show');
+const buttonElementFilter = document.querySelector('#filter');
+const listElement = document.querySelector('ol');
 const selectorElementType = document.getElementById('type');
+
+let data = [];
+let titles = [];
 
 async function requestTitles(user, status, type, showScore, valueScore, showStatusAired, valueStatus, showEpisodes) {
     try {
-        //tipo de status de lancamento anime/manga
-        let typeAired = type == 'anime' ? 'airing_status' : 'publishing_status';
-        //tipo de total episodios/capitulos
-        let typeTotal = type == 'anime' ? 'total_episodes' : 'total_chapters';
-        let nameTypeTotal = type == 'anime' ? 'Episódios' : 'Capítulos';
-        let arrayData = ['1'];
-        let index = 0;
+        let arrayData = [''],
+            index = 0;
         while (arrayData.length != 0) {
-            let [titles, title, titleScore, titleStatus, scores, statusAired, episodes] = [[], [], [], [], [], [], []];
             index++;
             const response = await axios.get(`https://api.jikan.moe/v3/user/${user}/${type}list/${status}?page=${index}`);
             arrayData = response.data[type];
-            for (let i = 0; i < arrayData.length; i++) {
-                //verifica se mostra o numero de episodios ou nao
-                episodes[i] = '';
-                if (showEpisodes == 'yes') {
-                    let quantity = arrayData[i][typeTotal] == 0 ? 'Desconhecido' : arrayData[i][typeTotal];
-                    episodes[i] = `| Número de ${nameTypeTotal}: ${quantity}`;
-                }
-                //verifica se mostra ou nao o status de lancamento
-                statusAired[i] = '';
-                if (showStatusAired == 'yes') {
-                    statusAired[i] = '| Not yet aired';
-                    if (arrayData[i][typeAired] == 2) {
-                        statusAired[i] = '| Finished';
-                    } else if (arrayData[i][typeAired] == 1) {
-                        statusAired[i] = '| Airing';
-                    }
-                }
-                //verifica se mostra ou nao as notas
-                scores[i] = '';
-                if (showScore == 'yes') {
-                    arrayData[i].score = arrayData[i].score == 0 ? 'Não tem nota' : arrayData[i].score;
-                    scores[i] = `| Nota: ${arrayData[i].score}`;
-                }
-                //filtra os nomes pela nota
-                if (arrayData[i].score == valueScore) {
-                    titleScore[i] = arrayData[i].title;
-                } else if (valueScore == 'no') {
-                    titleScore[i] = arrayData[i].title;
-                }
-                //filtra os nome pelo status de lancamento
-                if (arrayData[i][typeAired] == valueStatus) {
-                    titleStatus[i] = arrayData[i].title;
-                } else if (valueStatus == 'no') {
-                    titleStatus[i] = arrayData[i].title;
-                }
-                //filtra entre os filtros
-                if (titleScore[i] == titleStatus[i]) {
-                    title[i] = arrayData[i].title;
-                }
-                //filtra os espacos vazios do array
-                if (title[i] != undefined) {
-                    titles[i] = `${title[i]} ${scores[i]} ${statusAired[i]} ${episodes[i]}`;
-                }
-            }
-            renderTodos(titles);
-        }
+            saveTitles(arrayData, type, showScore, valueScore, showStatusAired, valueStatus, showEpisodes);
+        };
     } catch (e) {
         alert(e);
     }
 }
+
+
+function saveTitles(arrayData, type, showScore, valueScore, showStatusAired, valueStatus, showEpisodes) {
+    data.push(arrayData);
+    if (arrayData.length === 0) {
+        filters(data, type, showScore, valueScore, showStatusAired, valueStatus, showEpisodes);
+    }
+}
+
+function filters(data, type, showScore, valueScore, showStatusAired, valueStatus, showEpisodes) {
+    try {
+        //tipo de status de lancamento anime/manga
+        let typeAired = type == 'anime' ? 'airing_status' : 'publishing_status',
+            //tipo de total episodios/capitulos
+            typeTotal = type == 'anime' ? 'total_episodes' : 'total_chapters',
+            nameTypeTotal = type == 'anime' ? 'Episódios' : 'Capítulos';
+
+        let [title, titleScore, titleStatus, scores, statusAired, episodes] = [[], [], [], [], [], []];
+        for (let i = 0; i < data.length; i++) {
+            arrayData = data[i];
+            for (let j = 0; j < arrayData.length; j++) {
+                //verifica se mostra o numero de episodios ou nao
+                episodes[j] = '';
+                if (showEpisodes == 'yes') {
+                    let quantity = arrayData[i][typeTotal] == 0 ? 'Desconhecido' : arrayData[j][typeTotal];
+                    episodes[j] = `| Número de ${nameTypeTotal}: ${quantity}`;
+                }
+                //verifica se mostra ou nao o status de lancamento
+                statusAired[j] = '';
+                if (showStatusAired == 'yes') {
+                    statusAired[j] = '| Not yet aired';
+                    if (arrayData[j][typeAired] == 2) {
+                        statusAired[j] = '| Finished';
+                    } else if (arrayData[j][typeAired] == 1) {
+                        statusAired[j] = '| Airing';
+                    }
+                }
+                //verifica se mostra ou nao as notas
+                scores[j] = '';
+                if (showScore == 'yes') {
+                    arrayData[j].score = arrayData[j].score == 0 ? 'Não tem nota' : arrayData[j].score;
+                    scores[j] = `| Nota: ${arrayData[j].score}`;
+                }
+                //filtra os nomes pela nota
+                if (arrayData[j].score == valueScore) {
+                    titleScore[j] = arrayData[j].title;
+                } else if (valueScore == 'no') {
+                    titleScore[j] = arrayData[j].title;
+                }
+                //filtra os nome pelo status de lancamento
+                if (arrayData[j][typeAired] == valueStatus) {
+                    titleStatus[j] = arrayData[j].title;
+                } else if (valueStatus == 'no') {
+                    titleStatus[j] = arrayData[j].title;
+                }
+                //filtra entre os filtros
+                if (titleScore[j] == titleStatus[j]) {
+                    title[j] = arrayData[j].title;
+                }
+                //filtra os espacos vazios do array
+                if (title[j] != undefined) {
+                    titles.push(`${title[j]} ${scores[j]} ${statusAired[j]} ${episodes[j]}`);
+                }
+            }
+        }
+        listElement.innerHTML = '';
+        renderTodos(titles);
+    }
+    catch (e) {
+        alert(e);
+    }
+}
+
 
 function renderTodos(titles) {
     for (todo of titles) {
@@ -107,7 +134,7 @@ selectorElementType.onclick = function () {
     }
 }
 
-buttonElement.onclick = function () {
+buttonElementShow.onclick = function () {
     //busca os elementos do html
     const inputElementUser = document.querySelector('#app input');
     const selectorElementStatus = document.getElementById('status');
@@ -126,6 +153,28 @@ buttonElement.onclick = function () {
     const valueStatus = selectorElementValueStatus.options[selectorElementValueStatus.selectedIndex].value;
     const showEpisodes = selectorElementShowEpisodes.options[selectorElementShowEpisodes.selectedIndex].value;
 
-    listElement.innerHTML = '';
+    data = [];
+    titles = [];
     requestTitles(user, status, type, score, valueScore, statusAired, valueStatus, showEpisodes);
+}
+
+buttonElementFilter.onclick = function () {
+
+    const selectorElementScore = document.getElementById('showScore');
+    const selectorElementValueScore = document.getElementById('scores');
+    const selectorElementStatusAired = document.getElementById('statusAired');
+    const selectorElementValueStatus = document.getElementById('valueStatus');
+    const selectorElementShowEpisodes = document.getElementById('showEpisodes');
+
+    //pega o valor dos elementos do html
+    const type = selectorElementType.options[selectorElementType.selectedIndex].value;
+    const score = selectorElementScore.options[selectorElementScore.selectedIndex].value;
+    const valueScore = selectorElementValueScore.options[selectorElementValueScore.selectedIndex].value;
+    const statusAired = selectorElementStatusAired.options[selectorElementStatusAired.selectedIndex].value;
+    const valueStatus = selectorElementValueStatus.options[selectorElementValueStatus.selectedIndex].value;
+    const showEpisodes = selectorElementShowEpisodes.options[selectorElementShowEpisodes.selectedIndex].value;
+    
+    titles = [];
+    filters(data, type, score, valueScore, statusAired, valueStatus, showEpisodes);
+
 }

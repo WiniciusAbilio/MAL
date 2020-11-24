@@ -8,6 +8,11 @@ let titles = [];
 
 async function requestTitles(user, status, type, showScore, valueScore, showStatusAired, valueStatus, showEpisodes) {
     try {
+        showScore = 'no';
+        valueScore = 'no';
+        showStatusAired = 'no';
+        valueStatus = 'no';
+        showEpisodes = 'no';
         let arrayData = [''],
             index = 0;
         while (arrayData.length != 0) {
@@ -173,7 +178,7 @@ buttonElementFilter.onclick = function () {
     const statusAired = selectorElementStatusAired.options[selectorElementStatusAired.selectedIndex].value;
     const valueStatus = selectorElementValueStatus.options[selectorElementValueStatus.selectedIndex].value;
     const showEpisodes = selectorElementShowEpisodes.options[selectorElementShowEpisodes.selectedIndex].value;
-    
+
     titles = [];
     filters(data, type, score, valueScore, statusAired, valueStatus, showEpisodes);
 

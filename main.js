@@ -44,7 +44,12 @@ function filters(data, type, showScore, valueScore, showStatusAired, valueStatus
 
         let [title, titleScore, titleStatus, scores, statusAired, episodes] = [[], [], [], [], [], []];
 
-        arrayData = [...data[0], ...data[1]];
+        let template = '[';
+        for (let i = 0; i < data.length; i++) {
+            template += `...data[${i}], `;
+        }
+        template += ']';
+        arrayData = eval(template);
 
         for (let j = 0; j < arrayData.length; j++) {
             //verifica se mostra o numero de episodios ou nao

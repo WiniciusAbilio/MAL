@@ -55,7 +55,7 @@ function filters(data, type, showScore, valueScore, showStatusAired, valueStatus
             //verifica se mostra o numero de episodios ou nao
             episodes[j] = '';
             if (showEpisodes == 'yes') {
-                let quantity = arrayData[i][typeTotal] == 0 ? 'Desconhecido' : arrayData[j][typeTotal];
+                let quantity = arrayData[j][typeTotal] == 0 ? 'Desconhecido' : arrayData[j][typeTotal];
                 episodes[j] = `| Número de ${nameTypeTotal}: ${quantity}`;
             }
             //verifica se mostra ou nao o status de lancamento
@@ -99,6 +99,7 @@ function filters(data, type, showScore, valueScore, showStatusAired, valueStatus
         renderTodos(titles);
     }
     catch (e) {
+        console.log(e);
         alert(e);
     }
 }
